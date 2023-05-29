@@ -17,7 +17,7 @@ function deletarPessoa(id) {
 
     PessoaAPI.deletePessoa(id).then(() => {
         if (erro.value) {
-            return toast.abrirToast("error", erro.value);
+            return toast.abrirToast("error", "Não foi possível deletar essa pessoa.");
         }
         loading.value = false;
         fecharModal(modalConfirm.value);
