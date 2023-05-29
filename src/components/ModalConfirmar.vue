@@ -16,10 +16,10 @@ function deletarPessoa(id) {
     loading.value = true;
 
     PessoaAPI.deletePessoa(id).then(() => {
+        loading.value = false;
         if (erro.value) {
             return toast.abrirToast("error", "Não foi possível deletar essa pessoa.");
         }
-        loading.value = false;
         fecharModal(modalConfirm.value);
         toast.abrirToast("success", "Pessoa excluída com sucesso!");
     })
