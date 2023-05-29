@@ -35,7 +35,7 @@ function cadastrarPessoa() {
 
   PessoaAPI.postPessoa(novaPessoa).then(() => {
     if (erro.value) {
-      return toast.abrirToast("error", erro.value);
+      return toast.abrirToast("error", "Não foi possível cadastrar essa pessoa.");
     }
     fecharModal(modal.value);
     toast.abrirToast("success", "Pessoa cadastrada com sucesso!");
@@ -45,7 +45,7 @@ function cadastrarPessoa() {
 function editarPessoa() {
   PessoaAPI.editPessoa(pessoa.value).then(() => {
     if (erro.value) {
-      return toast.abrirToast("error", erro.value);
+      return toast.abrirToast("error", "Não foi possível editar essa pessoa.");
     }
     fecharModal(modal.value);
     toast.abrirToast("success", "Pessoa editada com sucesso!");
