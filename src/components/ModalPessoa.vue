@@ -10,9 +10,11 @@ const pessoa = computed(() => store.state.pessoaSelecionada);
 const modal = ref("");
 const title = computed(() => `${store.state.acaoModal} pessoa`);
 const erro = computed(() => store.state.erros);
+const loading = ref(false);
 
 function confirmar(data) {
-  if (!validarDataNascimento(data)) {
+  const dataNascimento = new Date(data);
+  if (!validarDataNascimento(dataNascimento)) {
     return toast.abrirToast("error", "Você precisa ser maior de idade!");
   } else {
     if (acao.value == "Cadastrar") {
@@ -25,6 +27,8 @@ function confirmar(data) {
 }
 
 function cadastrarPessoa() {
+  loading.value = true;
+
   const novaPessoa = {
     nome: pessoa.value.nome,
     dataNascimento: pessoa.value.dataNascimento,
@@ -34,6 +38,7 @@ function cadastrarPessoa() {
   };
 
   PessoaAPI.postPessoa(novaPessoa).then(() => {
+    loading.value = false;
     if (erro.value) {
       return toast.abrirToast("error", "Não foi possível cadastrar essa pessoa.");
     }
@@ -43,7 +48,10 @@ function cadastrarPessoa() {
 }
 
 function editarPessoa() {
+  loading.value = true;
+
   PessoaAPI.editPessoa(pessoa.value).then(() => {
+    loading.value = false;
     if (erro.value) {
       return toast.abrirToast("error", "Não foi possível editar essa pessoa.");
     }
@@ -55,10 +63,10 @@ function editarPessoa() {
 function validarDataNascimento(data) {
   const dataMinima = new Date();
   dataMinima.setFullYear(dataMinima.getFullYear() - 18);
-  if (data >= dataMinima) {
-    return true;
-  } else {
+  if (data > dataMinima) {
     return false;
+  } else {
+    return true;
   }
 }
 
@@ -184,11 +192,13 @@ onMounted(() => {
       </section>
       <footer class="modal-card-foot is-flex">
         <button
+          v-if="!loading"
           class="button ml-auto"
           @click="confirmar(pessoa.dataNascimento)"
         >
           Gravar
         </button>
+        <button class="button is-danger is-loading" v-if="loading"></button>
         <button class="button" @click="fecharModal(modal)">Cancelar</button>
       </footer>
     </div>
